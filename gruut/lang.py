@@ -839,6 +839,8 @@ def get_zh_settings(lang_dir=None, **settings_args) -> TextProcessorSettings:
 
 from collections import deque
 
+# TODO review all functions, may need refactor
+# TODO define depending the dialect
 def vocal(carac: str) -> bool:
     vocal_chars = ['a', 'à', 'e', 'é', 'è', 'i', 'í', 'ï', 'o', 'ó', 'ò', 'u', 'ü', 'ú']
     return carac in vocal_chars
@@ -1425,7 +1427,7 @@ class MotNuclis:
                 fronteres.append(self.pos_nuclis[i] + 3)
 
             else:
-                _LOGGER.info(f"No puc separar en sillabes el mot {self.el_mot}, cluster massa gran, de longitud {longi}")
+                _LOGGER.debug(f"No puc separar en sillabes el mot {self.el_mot}, cluster massa gran, de longitud {longi}")
                 exit(1)   
 
         numsil = len(fronteres)
@@ -1983,19 +1985,25 @@ class CatalanPreProcessText:
         preprocessed_tokens = []
         for token in tokens:
             
-            if token in breaks:
-                processed_token = token
-            else:
-                is_in_lexicon = self.lookup_phonemes(token) is not None
-                if is_in_lexicon:
+            try:
+                if token in breaks:
                     processed_token = token
                 else:
-                    tr = Transcripcio(token)
-                    processed_token = tr.stress_word()
+                    is_in_lexicon = self.lookup_phonemes(token) is not None
+                    if is_in_lexicon:
+                        processed_token = token
+                    else:
+                        tr = Transcripcio(token)
+                        processed_token = tr.stress_word()                    
+            except:
+                processed_token = token
+                _LOGGER.debug(f"Unable to stress token {token}.")
 
             preprocessed_tokens.append(processed_token)
         
         processed_text = "".join(preprocessed_tokens)
+
+        print(f"[TEST] {text}: {processed_text}")
 
         return processed_text
 
