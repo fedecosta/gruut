@@ -123,6 +123,7 @@ def main():
                 sentence_dict = dataclasses.asdict(sentence)
                 writer.write(sentence_dict)
                 
+        # TEST
         def output_transcription(
                 sentences, 
                 writer, 
@@ -206,6 +207,7 @@ def main():
                 word_end_sep = ']',
                 g2p_word_begin_sep = '{', 
                 g2p_word_end_sep = '}',
+
                 ):
             
             transcription = ""
@@ -235,13 +237,14 @@ def main():
 
         # I think lowercase is not applied before!
         text = text.lower()
-
+        print(f"[TEST] phonemize: {(not (args.no_lexicon and args.no_g2p))}")
+        print(f"[TEST] post_process: {(not args.no_post_process)}")
         try:
             graph, root = text_processor(
                 text,
                 ssml=args.ssml,
                 pos=(not args.no_pos),
-                phonemize=(not (args.no_lexicon and args.no_g2p)),
+                phonemize=False, #(not (args.no_lexicon and args.no_g2p)),
                 post_process=(not args.no_post_process),
                 verbalize_numbers=(not args.no_numbers),
                 verbalize_currency=(not args.no_currency),
