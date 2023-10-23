@@ -132,6 +132,7 @@ def main():
                 word_end_sep = ']',
                 g2p_word_begin_sep = '{', 
                 g2p_word_end_sep = '}',
+                phonemize=True,
                 ):
 
             transcription = ""
@@ -143,11 +144,15 @@ def main():
                         word_dict["text"], 
                         text_processor.get_settings(lang = args.language),
                         )
-                    if in_lexicon == False:
-                        transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                    # HACK
+                    if phonemize:
+                        if in_lexicon == False:
+                            transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                        else:
+                            transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
                     else:
-                        transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
-            
+                        transcription = word_dict["text"]
+
             row_to_write = f"{text_data}{args.output_csv_delimiter}{transcription}"
             row_to_write = [text_data, transcription]
             writer.writerow(row_to_write)  
@@ -207,7 +212,7 @@ def main():
                 word_end_sep = ']',
                 g2p_word_begin_sep = '{', 
                 g2p_word_end_sep = '}',
-
+                phonemize=True,
                 ):
             
             transcription = ""
@@ -219,11 +224,15 @@ def main():
                         word_dict["text"], 
                         text_processor.get_settings(lang = args.language),
                         )
-                    if in_lexicon == False:
-                        transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                    # HACK
+                    if phonemize:
+                        if in_lexicon == False:
+                            transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                        else:
+                            transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
                     else:
-                        transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
-            
+                        transcription = word_dict["text"]
+
             writer.write(transcription)
 
         def output_json(sentences, writer, text_data=None):
@@ -237,14 +246,12 @@ def main():
 
         # I think lowercase is not applied before!
         text = text.lower()
-        print(f"[TEST] phonemize: {(not (args.no_lexicon and args.no_g2p))}")
-        print(f"[TEST] post_process: {(not args.no_post_process)}")
         try:
             graph, root = text_processor(
                 text,
                 ssml=args.ssml,
                 pos=(not args.no_pos),
-                phonemize=False, #(not (args.no_lexicon and args.no_g2p)),
+                phonemize=(not (args.no_lexicon and args.no_g2p)),
                 post_process=(not args.no_post_process),
                 verbalize_numbers=(not args.no_numbers),
                 verbalize_currency=(not args.no_currency),
@@ -283,6 +290,7 @@ def main():
                         word_end_sep = args.word_end_sep,
                         g2p_word_begin_sep = args.g2p_word_begin_sep,
                         g2p_word_end_sep = args.g2p_word_end_sep,
+                        phonemize=(not (args.no_lexicon and args.no_g2p)),
                         )
                     outcsvfile.close()
             else:
@@ -294,6 +302,7 @@ def main():
                     word_end_sep = args.word_end_sep,
                     g2p_word_begin_sep = args.g2p_word_begin_sep,
                     g2p_word_end_sep = args.g2p_word_end_sep,
+                    phonemize=(not (args.no_lexicon and args.no_g2p)),
                     )
             
         
