@@ -2189,7 +2189,7 @@ def get_ca_settings(lang_dir=None, **settings_args) -> TextProcessorSettings:
         lang = "ca"
 
     lookup_phonemes = settings_args["lookup_phonemes"]
-
+    
     settings_values = {
         "major_breaks": {".", "?", "!"},
         "minor_breaks": {",", ";", ":", "..."},
