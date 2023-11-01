@@ -2022,7 +2022,7 @@ def phoneme_is_vowel(phoneme: str) -> bool:
     return phoneme in PHONEME_VOWELS
 
 def phoneme_is_stressed_vowel(phoneme: str) -> bool:
-    return phoneme in PHONEME_ACCENTED_VOWELS
+    return phoneme in PHONEME_STRESSED_VOWELS
 
 def phoneme_is_unstressed_vowel(phoneme: str) -> bool:
     return phoneme_is_vowel(phoneme) and not phoneme_is_stressed_vowel(phoneme)
