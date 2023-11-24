@@ -146,10 +146,15 @@ def main():
                         )
                     # HACK
                     if phonemize:
-                        if in_lexicon == False:
-                            transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                        # HACK some punctuations output a None phoneme
+                        # master and develop don't have this punctuation problem
+                        if word_phonemes is not None:
+                            if in_lexicon == False:
+                                transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                            else:
+                                transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
                         else:
-                            transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
+                            print(f"WARNING: {word_dict['text']} has phonemes = None.")
                     else:
                         transcription = word_dict["text"]
 
@@ -218,6 +223,7 @@ def main():
             transcription = ""
             for sentence in sentences:
                 sentence_dict = dataclasses.asdict(sentence)
+                #print(f"[TEST] sentence_dict: {sentence_dict}")
                 for word_dict in sentence_dict["words"]:
                     word_phonemes = word_dict["phonemes"]
                     in_lexicon = text_processor._is_word_in_lexicon(
@@ -226,12 +232,18 @@ def main():
                         )
                     # HACK
                     if phonemize:
-                        #print(f"[TEST] word_dict['text']: {word_dict['text']}")
-                        #print(f"[TEST] word_phonemes: {word_phonemes}")
-                        if in_lexicon == False:
-                            transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                        # HACK some punctuations output a None phoneme
+                        # master and develop don't have this punctuation problem
+                        if word_phonemes is not None:
+                            #print(f"[TEST] word_dict['text']: {word_dict['text']}")
+                            #print(f"[TEST] transcription: {transcription}")
+                            #print(f"[TEST] word_phonemes: {word_phonemes}")
+                            if in_lexicon == False:
+                                transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
+                            else:
+                                transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
                         else:
-                            transcription = f"{transcription.strip()} {' '.join([word_begin_sep] + word_phonemes + [word_end_sep]).strip()}".strip()
+                            print(f"WARNING: {word_dict['text']} has phonemes = None.")
                     else:
                         transcription = word_dict["text"]
 
