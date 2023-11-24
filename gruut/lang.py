@@ -1992,7 +1992,7 @@ class CatalanPreProcessText:
         processed_text = "".join(preprocessed_tokens)
 
         _LOGGER.debug(f"{text} preprocessed obtaining: {processed_text}")
-        print(f"[TEST] {text} preprocessed obtaining: {processed_text}")
+        #print(f"[TEST] {text} preprocessed obtaining: {processed_text}")
 
         return processed_text
 

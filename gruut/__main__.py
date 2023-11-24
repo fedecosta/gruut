@@ -226,8 +226,8 @@ def main():
                         )
                     # HACK
                     if phonemize:
-                        print(f"[TEST] word_dict['text']: {word_dict['text']}")
-                        print(f"[TEST] word_phonemes: {word_phonemes}")
+                        #print(f"[TEST] word_dict['text']: {word_dict['text']}")
+                        #print(f"[TEST] word_phonemes: {word_phonemes}")
                         if in_lexicon == False:
                             transcription = f"{transcription.strip()} {' '.join([g2p_word_begin_sep] + word_phonemes + [g2p_word_end_sep]).strip()}".strip()
                         else:
